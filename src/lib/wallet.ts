@@ -40,7 +40,13 @@ export function useWallet() {
   useEffect(() => {
     const sync = () => {
       setB(read(BK, DEFAULT));
-      setC(read(CK, DEFAULT_CUSTOMERS));
+      const saved = read<Customer[]>(CK, []);
+      const missing = DEFAULT_CUSTOMERS.filter((d) => !saved.some((s) => s.phone === d.phone));
+      if (missing.length) {
+        const merged = [...saved, ...missing];
+        localStorage.setItem(CK, JSON.stringify(merged));
+        setC(merged);
+      } else setC(saved);
     };
     sync();
     listeners.add(sync);
