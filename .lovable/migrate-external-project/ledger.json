@@ -1,0 +1,10 @@
+[
+  {"capability": "code", "source": "github:mossabjamil2009912-ctrl/lina-hhhhhh-receipt", "outcome": "migrate", "status": "in_progress", "next_action": "copy src, public, config"},
+  {"capability": "schema", "source": "none (offline app, localStorage only)", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
+  {"capability": "records", "source": "device localStorage", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
+  {"capability": "auth", "source": "local hashed password in src/lib/gate.ts", "outcome": "preserve", "status": "in_progress", "next_action": "copy as-is"},
+  {"capability": "pwa_offline", "source": "vite-plugin-pwa", "outcome": "preserve", "status": "in_progress", "next_action": "install dependency"},
+  {"capability": "media_assets", "source": "src/assets, public/fonts, tone2.mp3", "outcome": "migrate", "status": "in_progress", "next_action": "copy files; skip unused asset pointers from other projects"},
+  {"capability": "secrets", "source": "none", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
+  {"capability": "verification", "source": "-", "outcome": "verify", "status": "pending", "next_action": "build, tests, screenshot"}
+]
