@@ -12,6 +12,31 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { setupPwa, keepDataPersistent } from "../lib/pwa";
+import { UpdatePrompt } from "../components/UpdatePrompt";
+
+// After a new deploy, old chunk hashes 404 → reload once to fetch the fresh build.
+if (typeof window !== "undefined") {
+  const isChunkErr = (m: string) =>
+    /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(m);
+  const reloadOnce = () => {
+    const k = "jaib-chunk-reload";
+    const last = Number(sessionStorage.getItem(k) || 0);
+    if (Date.now() - last < 10000) return;
+    sessionStorage.setItem(k, String(Date.now()));
+    window.location.reload();
+  };
+  window.addEventListener("vite:preloadError", (e) => {
+    e.preventDefault();
+    reloadOnce();
+  });
+  window.addEventListener("unhandledrejection", (e) => {
+    if (isChunkErr(String((e.reason as Error)?.message ?? e.reason))) reloadOnce();
+  });
+  window.addEventListener("error", (e) => {
+    if (isChunkErr(String(e.message))) reloadOnce();
+  });
+}
 
 function NotFoundComponent() {
   return (
@@ -39,6 +64,15 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
+    if (/Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(String((error as Error)?.message))) {
+      const k = "jaib-chunk-reload";
+      const last = Number(sessionStorage.getItem(k) || 0);
+      if (Date.now() - last > 10000) {
+        sessionStorage.setItem(k, String(Date.now()));
+        window.location.reload();
+        return;
+      }
+    }
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
@@ -78,11 +112,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { name: "theme-color", content: "#ffffff" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-title", content: "جيب" },
+      { title: "جيب - الرئيسية" },
+      { name: "description", content: "محفظة جيب الإلكترونية" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "جيب - الرئيسية" },
+      { property: "og:description", content: "محفظة جيب الإلكترونية" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -92,7 +129,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -103,7 +142,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ar" dir="rtl">
       <head>
         <HeadContent />
       </head>
@@ -115,13 +154,36 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+const allImgs = import.meta.glob("@/assets/jaib/*.webp", { eager: true, import: "default" }) as Record<string, string>;
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => {
+    void setupPwa();
+    void keepDataPersistent();
+    localStorage.removeItem("jaib-auth");
+    let hiddenAt = 0;
+    const onVis = () => {
+      if (document.hidden) hiddenAt = Date.now();
+      else if (hiddenAt && Date.now() - hiddenAt > 30000 && sessionStorage.getItem("jaib-auth")) {
+        sessionStorage.removeItem("jaib-auth");
+        location.href = "/login";
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+  useEffect(() => {
+    // Warm the cache so every screen's icons appear instantly.
+    const t = setTimeout(() => Object.values(allImgs).forEach((src) => { const i = new Image(); i.decoding = "async"; i.src = src; }), 300);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <UpdatePrompt />
     </QueryClientProvider>
   );
 }

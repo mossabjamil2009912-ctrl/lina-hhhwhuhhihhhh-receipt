@@ -2,6 +2,19 @@
 @source "../src";
 @import "tw-animate-css";
 
+@font-face { font-family: 'Lina Round'; src: url('/fonts/linaround_thin.otf') format('opentype'); font-weight: 100; font-display: swap; }
+@font-face { font-family: 'Lina Round'; src: url('/fonts/linaround_extra_light.otf') format('opentype'); font-weight: 200; font-display: swap; }
+@font-face { font-family: 'Lina Round'; src: url('/fonts/linaround_light.otf') format('opentype'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Lina Round'; src: url('/fonts/linaround_regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Lina Round'; src: url('/fonts/linaround_semi_bold.otf') format('opentype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Lina Round'; src: url('/fonts/linaround_bold.otf') format('opentype'); font-weight: 700 900; font-display: swap; }
+@font-face { font-family: 'Circe Rounded'; src: url('/fonts/circle_rounded_thin.otf') format('opentype'); font-weight: 100; font-display: swap; unicode-range: U+0000-00FF, U+2000-206F, U+20AC; }
+@font-face { font-family: 'Circe Rounded'; src: url('/fonts/circle_rounded_extra_light.otf') format('opentype'); font-weight: 200; font-display: swap; unicode-range: U+0000-00FF, U+2000-206F, U+20AC; }
+@font-face { font-family: 'Circe Rounded'; src: url('/fonts/circle_rounded_light.otf') format('opentype'); font-weight: 300; font-display: swap; unicode-range: U+0000-00FF, U+2000-206F, U+20AC; }
+@font-face { font-family: 'Circe Rounded'; src: url('/fonts/circle_rounded_regular.otf') format('opentype'); font-weight: 400; font-display: swap; unicode-range: U+0000-00FF, U+2000-206F, U+20AC; }
+@font-face { font-family: 'Circe Rounded'; src: url('/fonts/circle_rounded_bold.otf') format('opentype'); font-weight: 700; font-display: swap; unicode-range: U+0000-00FF, U+2000-206F, U+20AC; }
+@font-face { font-family: 'Circe Rounded'; src: url('/fonts/circle_rounded_extra_bold.otf') format('opentype'); font-weight: 800 900; font-display: swap; unicode-range: U+0000-00FF, U+2000-206F, U+20AC; }
+
 @custom-variant dark (&:is(.dark *));
 
 /*
@@ -27,12 +40,18 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
+  --color-login-tab: var(--login-tab);
+  --color-login-sheet: var(--login-sheet);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-success: var(--success);
+  --color-dark-card: var(--dark-card);
+  --color-banner: var(--banner);
+  --font-sans: 'Circe Rounded', 'Lina Round', sans-serif;
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -63,14 +82,19 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: oklch(0.965 0.005 295);
+  --login-tab: oklch(0.82 0.004 295);
+  --login-sheet: oklch(0.95 0.004 295);
+  --foreground: oklch(0.27 0.003 286);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.59 0.23 22);
+  --success: oklch(0.68 0.17 150);
+  --primary-foreground: oklch(1 0 0);
+  --dark-card: oklch(0.25 0.005 260);
+  --banner: oklch(0.9 0.003 260);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
@@ -105,6 +129,7 @@
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
   --primary: oklch(0.929 0.013 255.508);
+  --success: oklch(0.72 0.17 150);
   --primary-foreground: oklch(0.208 0.042 265.755);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
@@ -138,7 +163,46 @@
   }
 
   body {
+    overflow-x: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
 }
+
+@keyframes jaib-up { from { transform: translateY(110%); } to { transform: translateY(0); } }
+@keyframes jaib-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes jaib-drop { 0% { transform: translateY(-40%); opacity: 0; } 60% { opacity: 1; } 100% { transform: translateY(0); } }
+@keyframes jaib-pulse { 0%,100% { transform: scale(.8) rotate(0); opacity: .6; } 50% { transform: scale(1.1) rotate(180deg); opacity: 1; } }
+.jaib-up { animation: jaib-up .3s cubic-bezier(.22,.61,.36,1); }
+.jaib-fade { animation: jaib-fade .3s ease-out; }
+@keyframes jaib-build { 0% { clip-path: inset(42% 58% 58% 0); } 100% { clip-path: inset(0 58% 58% 0); } }
+@keyframes jaib-draw { 0% { stroke-dasharray: 2 100; } 50% { stroke-dasharray: 100 0; } 100% { stroke-dasharray: 2 100; stroke-dashoffset: -98; } }
+@keyframes jaib-rot { to { transform: rotate(360deg); } }
+.jaib-build { clip-path: inset(0 58% 58% 0); animation: jaib-build 1s steps(5, end) .2s both; }
+.jaib-draw { animation: jaib-draw 1.6s ease-in-out infinite; }
+.jaib-spin { animation: jaib-rot 2s linear infinite; }
+.jaib-pulse { animation: jaib-pulse 1.1s ease-in-out infinite; }
+
+@keyframes jaib-ld { 0% { stroke-dasharray: 100 100; stroke-dashoffset: 0; } 45% { stroke-dasharray: 6 100; stroke-dashoffset: -94; } 55% { stroke-dasharray: 6 100; stroke-dashoffset: 0; } 100% { stroke-dasharray: 100 100; stroke-dashoffset: 0; } }
+@keyframes jaib-ld-dot { to { transform: rotate(360deg); } }
+.jaib-ld-path { animation: jaib-ld 1.5s ease-in-out infinite; }
+.jaib-ld-dot { transform-origin: 62px 140px; animation: jaib-ld-dot 1.5s ease-in-out infinite; }
+@keyframes jaib-rc-dot { 0% { transform: rotate(-140deg); } 22%,94% { transform: rotate(0); } 100% { transform: rotate(-140deg); } }
+.jaib-rc-dot { transform-origin: 62px 140px; animation: jaib-rc-dot 4s ease-out .45s infinite both; }
+@keyframes jaib-rc-frame { 0%,4% { transform: translateY(-40px) scaleY(.04); opacity: 0; } 8% { opacity: 1; } 15% { transform: translateY(0) scaleY(.06); } 49%,90% { transform: translateY(0) scaleY(1); opacity: 1; } 97%,100% { transform: translateY(0) scaleY(1); opacity: 0; } }
+.jaib-rc-frame { transform-box: view-box; transform-origin: 62px 95px; animation: jaib-rc-frame 4s cubic-bezier(.3,.6,.3,1) .45s infinite both; }
+@keyframes jaib-rc-col { 0%,46% { transform: scaleY(0); opacity: 1; } 55% { transform: scaleY(1); opacity: 1; } 61%,100% { transform: scaleY(1); opacity: 0; } }
+.jaib-rc-col { transform-box: fill-box; transform-origin: center; animation: jaib-rc-col 4s ease-out .45s infinite both; }
+@keyframes jaib-rc-bar1 { 0%,54% { transform: scaleX(0); opacity: 1; } 64%,90% { transform: scaleX(1); opacity: 1; } 97%,100% { transform: scaleX(1); opacity: 0; } }
+@keyframes jaib-rc-bar2 { 0%,59% { transform: scaleX(0); opacity: 1; } 69%,90% { transform: scaleX(1); opacity: 1; } 97%,100% { transform: scaleX(1); opacity: 0; } }
+.jaib-rc-bar { transform-box: fill-box; transform-origin: center; animation: jaib-rc-bar1 4s ease-out .45s infinite both; }
+.jaib-rc-bar2 { animation-name: jaib-rc-bar2; }
+.jaib-rc-still .jaib-rc-dot, .jaib-rc-still .jaib-rc-frame, .jaib-rc-still .jaib-rc-bar { animation: none; opacity: 1; transform: none; }
+.jaib-rc-still .jaib-rc-col { animation: none; opacity: 0; }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

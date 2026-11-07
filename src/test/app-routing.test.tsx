@@ -15,3 +15,10 @@ describe("App routing", () => {
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
 });
+
+describe("Login route", () => {
+  it("matches /login", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes("/login").at(-1)?.routeId).toBe("/login");
+  });
+});
