@@ -2,6 +2,13 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
+    "package_name": "app.lovable.lina_hhhwhughhihhhh_receipt.twa",
+    "sha256_cert_fingerprints": ["6F:18:B6:C9:BF:E0:FA:E3:6D:04:C7:09:C0:63:1E:CF:10:DF:A8:E3:28:48:BF:4F:C6:29:D2:48:77:4C:55:52"]
+  }
+}, {
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
     "package_name": "app.lovable.lina_hhhwhuhhihhhh_receipt.twa",
     "sha256_cert_fingerprints": ["21:A2:8B:87:FB:F6:E7:8A:FB:8B:7E:1F:F7:4B:AC:41:D3:D6:34:D7:50:D2:A4:7B:9E:14:83:ED:D0:51:2A:49"]
   }
