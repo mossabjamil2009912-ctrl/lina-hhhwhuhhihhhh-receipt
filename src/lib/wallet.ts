@@ -4,6 +4,12 @@ export type Balances = { yer: number; sar: number; usd: number };
 export type Customer = { name: string; phone: string };
 
 const DEFAULT: Balances = { yer: 85400, sar: 1250, usd: 320.5 };
+export const DEFAULT_CUSTOMERS: Customer[] = [
+  { name: "محمد جميل محمد غالب البعني", phone: "775741420" },
+  { name: "عبدالله حسين صالح صالح القربي", phone: "772377770" },
+  { name: "سامح عبدالله علي الضحل", phone: "773903901" },
+  { name: "مجد عبدالله حسين صالح القربي", phone: "780480143" },
+];
 const BK = "jaib-balances";
 const CK = "jaib-customers";
 const listeners = new Set<() => void>();
@@ -34,7 +40,7 @@ export function useWallet() {
   useEffect(() => {
     const sync = () => {
       setB(read(BK, DEFAULT));
-      setC(read(CK, []));
+      setC(read(CK, DEFAULT_CUSTOMERS));
     };
     sync();
     listeners.add(sync);
