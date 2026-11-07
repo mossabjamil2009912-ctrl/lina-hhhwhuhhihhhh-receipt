@@ -12,4 +12,4 @@
 ## Project rules
 - Offline Android app (PWA for PWABuilder): service worker comes only from vite-plugin-pwa generateSW in vite.config.ts with outDir/globDirectory `dist/client`, registered only from `src/lib/pwa.ts`. Why: the client build lives in dist/client; anywhere else the worker is not served.
 - All app data and the login check stay on the device (localStorage + hashed password in `src/lib/gate.ts`), with no server calls. Why: the app must work fully offline.
-- Service worker updates apply only with user consent: either «تحديث بيانات التطبيق» in Profile or the yes/no UpdatePrompt shown on open (findUpdate/applyUpdate in src/lib/pwa.ts). Why: user wants no silent auto-updates.
+- Service worker updates are forced: UpdatePrompt checks on open and applies any downloaded version immediately (findUpdate/applyUpdate in src/lib/pwa.ts); Profile's «تحديث بيانات التطبيق» still checks manually. Why: user wants mandatory updates.
