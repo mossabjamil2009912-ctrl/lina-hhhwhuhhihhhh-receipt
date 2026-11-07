@@ -1,5 +1,5 @@
 [
-  {"capability": "code", "source": "github:mossabjamil2009912-ctrl/lina-hhhhhh-receipt", "outcome": "migrate", "status": "in_progress", "next_action": "copy src, public, config"},
+  {"capability": "code", "source": "github:mossabjamil2009912-ctrl/lina-hhhhhh-receipt", "outcome": "migrate", "status": "verified", "next_action": "none"},
   {"capability": "schema", "source": "none (offline app, localStorage only)", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
   {"capability": "records", "source": "device localStorage", "outcome": "not_applicable", "status": "verified", "next_action": "none"},
   {"capability": "auth", "source": "local hashed password in src/lib/gate.ts", "outcome": "preserve", "status": "in_progress", "next_action": "copy as-is"},
